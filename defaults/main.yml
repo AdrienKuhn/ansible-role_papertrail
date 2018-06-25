@@ -1,0 +1,16 @@
+---
+# defaults file for papertrail
+
+# "papertrail"
+# Papertrail configuration
+#
+papertrail:
+  dst:
+    host: CHANGE_ME
+    port: CHANGE_ME
+  files:
+    - /var/log/nginx/*.log
+    - /var/log/letsencrypt/*.log
+  remote_syslog: true
+  exclude_patterns:
+    - don't log this pattern

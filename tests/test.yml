@@ -1,0 +1,15 @@
+---
+- hosts: all
+  vars:
+    papertrail:
+      dst:
+        host: 127.0.0.1 # Fake host
+        port: 1111 # Fake port
+      files:
+        - /var/log/nginx/*.log
+        - /var/log/letsencrypt/*.log
+      remote_syslog: true
+      exclude_patterns:
+        - don't log this pattern
+  roles:
+    - ansible-role_papertrail

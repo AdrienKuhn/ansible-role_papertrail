@@ -1,0 +1,14 @@
+---
+# handlers file for papertrail
+
+- name: Restart Rsyslog daemon
+  become: yes
+  service:
+    name=rsyslog
+    state=restarted
+
+- name: Restart remote_syslog
+  become: yes
+  service:
+    name=remote_syslog
+    state=restarted

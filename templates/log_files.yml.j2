@@ -1,0 +1,12 @@
+files:
+{% for file in papertrail.files %}
+  - {{ file }}
+{% endfor %}
+destination:
+  host: {{ papertrail.dst.host }}
+  port: {{ papertrail.dst.port }}
+  protocol: tls
+exclude_patterns:
+{% for pattern in papertrail.exclude_patterns %}
+  - {{ pattern }}
+{% endfor %}

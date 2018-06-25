@@ -1,0 +1,55 @@
+---
+# tasks file for papertrail
+
+- name: Ensure Papertrail is configured
+  become: yes
+  copy:
+    content="*.* @{{ papertrail.dst.host }}:{{ papertrail.dst.port }}"
+    dest=/etc/rsyslog.d/95-papertrail.conf
+  notify: Restart Rsyslog daemon
+  when:
+    papertrail.dst.host is defined
+    and papertrail.dst.port is defined
+  tags: papertrail
+
+- name: Ensure papertrail remote_syslog is installed
+  become: yes
+  apt:
+    deb: https://github.com/papertrail/remote_syslog2/releases/download/v0.20-beta1/remote-syslog2_0.20-beta1_amd64.deb
+  notify: Restart remote_syslog
+  when:
+    papertrail.dst.host is defined
+    and papertrail.dst.port is defined
+    and papertrail.remote_syslog is defined
+    and papertrail.remote_syslog|bool == true
+    and papertrail.files is defined
+  tags: papertrail
+
+- name: Ensure remote_syslog is enabled
+  systemd:
+    name: remote_syslog
+    enabled: yes
+  when:
+    papertrail.dst.host is defined
+    and papertrail.dst.port is defined
+    and papertrail.remote_syslog is defined
+    and papertrail.remote_syslog|bool == true
+    and papertrail.files is defined
+  tags: papertrail
+
+- name: Ensure remote_syslog is configured
+  become: yes
+  template:
+    src=log_files.yml.j2
+    dest=/etc/log_files.yml
+    owner=0
+    group=0
+    mode=u=rw,g=r,o=r
+  notify: Restart remote_syslog
+  when:
+    papertrail.dst.host is defined
+    and papertrail.dst.port is defined
+    and papertrail.remote_syslog is defined
+    and papertrail.remote_syslog|bool == true
+    and papertrail.files is defined
+  tags: papertrail
